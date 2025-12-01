@@ -7,8 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     body {
-      /* Cores baseadas no logo: Preto/Vermelho */
-      background: linear-gradient(135deg, #121212, #200000);
+      /* Cor predominante vermelho/preto - Estilo Facção */
+      background: linear-gradient(135deg, #101010, #350000);
       color: #f8f8f2;
       font-family: 'Roboto', sans-serif;
       padding: 20px;
@@ -21,31 +21,32 @@
       background: #1e1e1e;
       padding: 40px;
       border-radius: 15px;
-      max-width: 600px;
+      max-width: 900px; /* AUMENTADO para esticar a calculadora */
       width: 95%;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
     }
     .logo-header {
         text-align: center;
         margin-bottom: 20px;
     }
     .logo-header img {
-        width: 100px; /* Tamanho da logo */
+        width: 120px; /* Logo maior */
         height: auto;
         border-radius: 10px;
-        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
     }
     h1 {
       text-align: center;
-      color: #ff5555; /* Cor vermelha para o título */
-      font-size: 2.2em;
+      color: #ff5555; /* Cor vermelha forte */
+      font-size: 2.8em; /* Título maior */
       margin-top: 10px;
       margin-bottom: 30px;
-      text-shadow: 0 0 5px #000;
+      text-shadow: 0 0 8px #000;
+      letter-spacing: 2px;
     }
     h2 {
       margin-top: 20px;
-      color: #ffb86c; /* Cor de destaque para seção */
+      color: #ffb86c;
       border-bottom: 1px solid #444;
       padding-bottom: 8px;
     }
@@ -115,11 +116,11 @@
     }
     .result {
       background: #0d0d0d;
-      padding: 20px;
+      padding: 25px; /* Mais destaque */
       margin-top: 20px;
       border-radius: 10px;
-      font-size: 1.5em;
-      border: 2px solid #ff5555;
+      font-size: 1.8em; /* Fonte maior para o resultado */
+      border: 3px solid #ff5555; /* Borda vermelha de destaque */
       text-align: center;
       color: #50fa7b;
     }
@@ -128,7 +129,8 @@
 <body>
   <div class="container">
     <div class="logo-header">
-            </div>
+        <img src="Trindade22.png" alt="Logo da Trindade">
+    </div>
     <h1>♦️ TRINDADE — TABELA DE PREÇOS ♦️</h1>
 
     <form id="calcForm">
