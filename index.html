@@ -21,7 +21,7 @@
       background: #1e1e1e;
       padding: 40px;
       border-radius: 15px;
-      max-width: 900px; /* AUMENTADO para esticar a calculadora */
+      max-width: 900px; /* Estendido */
       width: 95%;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
     }
@@ -30,15 +30,15 @@
         margin-bottom: 20px;
     }
     .logo-header img {
-        width: 120px; /* Logo maior */
+        width: 120px;
         height: auto;
         border-radius: 10px;
         box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
     }
     h1 {
       text-align: center;
-      color: #ff5555; /* Cor vermelha forte */
-      font-size: 2.8em; /* Título maior */
+      color: #ff5555;
+      font-size: 2.8em;
       margin-top: 10px;
       margin-bottom: 30px;
       text-shadow: 0 0 8px #000;
@@ -60,6 +60,18 @@
       font-size: 1.1em;
       border-bottom: 1px solid #333;
       text-align: left;
+    }
+    /* NOVO ESTILO PARA AS IMAGENS NA TABELA */
+    .item-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .item-cell img {
+        width: 40px; /* Tamanho do Pendrive */
+        height: auto;
+        vertical-align: middle;
+        border-radius: 3px;
     }
     input[type="number"] {
       width: 100%; 
@@ -116,11 +128,11 @@
     }
     .result {
       background: #0d0d0d;
-      padding: 25px; /* Mais destaque */
+      padding: 25px;
       margin-top: 20px;
       border-radius: 10px;
-      font-size: 1.8em; /* Fonte maior para o resultado */
-      border: 3px solid #ff5555; /* Borda vermelha de destaque */
+      font-size: 1.8em;
+      border: 3px solid #ff5555;
       text-align: center;
       color: #50fa7b;
     }
@@ -143,12 +155,61 @@
       <h2>💾 Vendas</h2>
       <table>
         <tr><th>Item</th><th>Preço (C/S Parceria)</th><th>Qtd</th></tr>
-        <tr><td>PENDRIVE FAJUTO</td><td>R$ 2.500 / R$ 3.000</td><td><input type="number" name="FAJUTO" min="0" value="0"></td></tr>
-        <tr><td>PENDRIVE COMUM</td><td>R$ 3.500 / R$ 4.000</td><td><input type="number" name="COMUM" min="0" value="0"></td></tr>
-        <tr><td>PENDRIVE INCOMUM</td><td>R$ 5.500 / R$ 6.000</td><td><input type="number" name="INCOMUM" min="0" value="0"></td></tr>
-        <tr><td>PENDRIVE RARO</td><td>R$ 12.000 / R$ 13.000</td><td><input type="number" name="RARO" min="0" value="0"></td></tr>
-        <tr><td>PENDRIVE ESPECIAL</td><td>R$ 25.000 / R$ 26.000</td><td><input type="number" name="ESPECIAL" min="0" value="0"></td></tr>
-        <tr><td>🧤 LUVA</td><td>R$ 1.000 / R$ 1.300</td><td><input type="number" name="LUVA" min="0" value="0"></td></tr>
+        
+        <tr>
+            <td>
+                <div class="item-cell">
+                    <img src="fajuto.png" alt="Pendrive Fajuto (Azul)"> PENDRIVE FAJUTO
+                </div>
+            </td>
+            <td>R$ 2.500 / R$ 3.000</td>
+            <td><input type="number" name="FAJUTO" min="0" value="0"></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="item-cell">
+                    <img src="comum.png" alt="Pendrive Comum (Branco)"> PENDRIVE COMUM
+                </div>
+            </td>
+            <td>R$ 3.500 / R$ 4.000</td>
+            <td><input type="number" name="COMUM" min="0" value="0"></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="item-cell">
+                    <img src="incomum.png" alt="Pendrive Incomum (Verde)"> PENDRIVE INCOMUM
+                </div>
+            </td>
+            <td>R$ 5.500 / R$ 6.000</td>
+            <td><input type="number" name="INCOMUM" min="0" value="0"></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="item-cell">
+                    <img src="raro.png" alt="Pendrive Raro (Vermelho)"> PENDRIVE RARO
+                </div>
+            </td>
+            <td>R$ 12.000 / R$ 13.000</td>
+            <td><input type="number" name="RARO" min="0" value="0"></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="item-cell">
+                    <img src="especial.png" alt="Pendrive Especial (Preto)"> PENDRIVE ESPECIAL
+                </div>
+            </td>
+            <td>R$ 25.000 / R$ 26.000</td>
+            <td><input type="number" name="ESPECIAL" min="0" value="0"></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="item-cell">
+                    🧤 LUVA
+                </div>
+            </td>
+            <td>R$ 1.000 / R$ 1.300</td>
+            <td><input type="number" name="LUVA" min="0" value="0"></td>
+        </tr>
       </table>
 
       <div class="button-group">
