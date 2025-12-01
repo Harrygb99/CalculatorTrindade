@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora de Vendas - TRINDADE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      /* Cores baseadas no logo: Preto/Vermelho */
+      background: linear-gradient(135deg, #121212, #200000);
+      color: #f8f8f2;
+      font-family: 'Roboto', sans-serif;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      background: #1e1e1e;
+      padding: 40px;
+      border-radius: 15px;
+      max-width: 600px;
+      width: 95%;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+    }
+    .logo-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .logo-header img {
+        width: 100px; /* Tamanho da logo */
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+    h1 {
+      text-align: center;
+      color: #ff5555; /* Cor vermelha para o título */
+      font-size: 2.2em;
+      margin-top: 10px;
+      margin-bottom: 30px;
+      text-shadow: 0 0 5px #000;
+    }
+    h2 {
+      margin-top: 20px;
+      color: #ffb86c; /* Cor de destaque para seção */
+      border-bottom: 1px solid #444;
+      padding-bottom: 8px;
+    }
+    table {
+      width: 100%;
+      margin-top: 15px;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px;
+      font-size: 1.1em;
+      border-bottom: 1px solid #333;
+      text-align: left;
+    }
+    input[type="number"] {
+      width: 100%; 
+      min-width: 80px;
+      padding: 6px;
+      font-size: 1em;
+      background: #282a36;
+      color: #fff;
+      border: 1px solid #ff5555;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    .parceria-options {
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #282a36;
+        border: 1px solid #ff5555;
+        border-radius: 10px;
+        text-align: center;
+    }
+    .parceria-options label {
+        margin-right: 20px;
+        font-size: 1.2em;
+        color: #f1fa8c;
+    }
+    .button-group {
+      text-align: center;
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 14px 28px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .calculate {
+      background: linear-gradient(to right, #ff5555, #cc0000);
+      color: #fff;
+    }
+    .calculate:hover {
+      background: linear-gradient(to right, #ff6e6e, #e60000);
+    }
+    .reset {
+      background-color: #6272a4;
+      color: white;
+    }
+    .reset:hover {
+      background-color: #7a8aa3;
+    }
+    .result {
+      background: #0d0d0d;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      font-size: 1.5em;
+      border: 2px solid #ff5555;
+      text-align: center;
+      color: #50fa7b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-header">
+            </div>
+    <h1>♦️ TRINDADE — TABELA DE PREÇOS ♦️</h1>
+
+    <form id="calcForm">
+
+      <div class="parceria-options">
+          <label><input type="radio" name="parceria" value="sem" checked> Sem Parceria</label>
+          <label><input type="radio" name="parceria" value="com"> Com Parceria</label>
+      </div>
+
+      <h2>💾 Vendas</h2>
+      <table>
+        <tr><th>Item</th><th>Preço (C/S Parceria)</th><th>Qtd</th></tr>
+        <tr><td>PENDRIVE FAJUTO</td><td>R$ 2.500 / R$ 3.000</td><td><input type="number" name="FAJUTO" min="0" value="0"></td></tr>
+        <tr><td>PENDRIVE COMUM</td><td>R$ 3.500 / R$ 4.000</td><td><input type="number" name="COMUM" min="0" value="0"></td></tr>
+        <tr><td>PENDRIVE INCOMUM</td><td>R$ 5.500 / R$ 6.000</td><td><input type="number" name="INCOMUM" min="0" value="0"></td></tr>
+        <tr><td>PENDRIVE RARO</td><td>R$ 12.000 / R$ 13.000</td><td><input type="number" name="RARO" min="0" value="0"></td></tr>
+        <tr><td>PENDRIVE ESPECIAL</td><td>R$ 25.000 / R$ 26.000</td><td><input type="number" name="ESPECIAL" min="0" value="0"></td></tr>
+        <tr><td>🧤 LUVA</td><td>R$ 1.000 / R$ 1.300</td><td><input type="number" name="LUVA" min="0" value="0"></td></tr>
+      </table>
+
+      <div class="button-group">
+        <button type="button" class="calculate" onclick="calcular()">Calcular Total</button>
+        <button type="button" class="reset" onclick="resetar()">Zerar</button>
+      </div>
+    </form>
+
+    <div id="resultado" class="result"></div>
+  </div>
+
+  <script>
+    // Definição dos preços com e sem parceria
+    const precosVariaveis = {
+        FAJUTO: { com: 2500, sem: 3000 },
+        COMUM: { com: 3500, sem: 4000 },
+        INCOMUM: { com: 5500, sem: 6000 },
+        RARO: { com: 12000, sem: 13000 },
+        ESPECIAL: { com: 25000, sem: 26000 },
+        LUVA: { com: 1000, sem: 1300 }
+    };
+
+    function formatCurrency(value) {
+      // Formata como moeda brasileira com 2 casas decimais.
+      return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
+    }
+
+    function calcular() {
+      const form = document.forms["calcForm"];
+      let total = 0;
+      
+      // Determina se a parceria está ativa
+      const isParceria = form.parceria.value === 'com';
+      const tipoPreco = isParceria ? 'com' : 'sem';
+
+      // Calcula o total
+      for (const item in precosVariaveis) {
+        const input = form[item];
+        const qtd = parseInt(input ? input.value : '0') || 0;
+        const preco = precosVariaveis[item][tipoPreco];
+        total += preco * qtd;
+      }
+      
+      document.getElementById("resultado").innerHTML = `<strong>TOTAL A RECEBER: ${formatCurrency(total)}</strong>`;
+    }
+
+    function resetar() {
+      const form = document.forms["calcForm"];
+      
+      // Reseta inputs de quantidade
+      for (const input of form.querySelectorAll('input[type="number"]')) input.value = 0;
+
+      // Reseta o seletor de Parceria para "Sem Parceria"
+      if (form.parceria) form.parceria.value = 'sem';
+      
+      document.getElementById("resultado").innerHTML = "";
+    }
+  </script>
+</body>
+</html>
