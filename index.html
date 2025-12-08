@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Calculadora de Vendas - TRINDADE</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     body {
       /* Cor predominante vermelho/preto - Estilo Facção */
@@ -61,7 +62,7 @@
       border-bottom: 1px solid #333;
       text-align: left;
     }
-    /* NOVO ESTILO PARA AS IMAGENS NA TABELA */
+    /* ESTILO PARA AS IMAGENS NA TABELA */
     .item-cell {
         display: flex;
         align-items: center;
@@ -84,6 +85,24 @@
       border-radius: 8px;
       box-sizing: border-box;
     }
+    /* Estilo para inputs de Vendedor/Comprador */
+    .input-group label {
+        display: block; 
+        color: #ff5555; 
+        margin-bottom: 5px; 
+        font-weight: bold;
+    }
+    .input-group input[type="text"] {
+        width: 100%; 
+        padding: 8px; 
+        font-size: 1em; 
+        background: #282a36; 
+        color: #fff; 
+        border: 1px solid #ff5555; 
+        border-radius: 8px; 
+        box-sizing: border-box;
+    }
+
     .parceria-options {
         margin-bottom: 30px;
         padding: 15px;
@@ -126,6 +145,13 @@
     .reset:hover {
       background-color: #7a8aa3;
     }
+    .download-btn {
+        background: #50fa7b; 
+        color: #0d0d0d;
+    }
+    .download-btn:hover {
+        background: #69ff94;
+    }
     .result {
       background: #0d0d0d;
       padding: 25px;
@@ -135,6 +161,15 @@
       border: 3px solid #ff5555;
       text-align: center;
       color: #50fa7b;
+    }
+    /* Estilo para a área de comprovante (opcional, para visualização antes do download) */
+    #comprovante-area {
+        padding: 20px; 
+        background: #1e1e1e; 
+        border: 3px solid #ffb86c; 
+        border-radius: 10px; 
+        margin-top: 20px; 
+        color: #f8f8f2;
     }
   </style>
 </head>
@@ -146,7 +181,17 @@
     <h1>♦️ TRINDADE — TABELA DE PREÇOS ♦️</h1>
 
     <form id="calcForm">
-
+        
+      <div class="input-group" style="margin-bottom: 25px; display: flex; gap: 20px;">
+          <div style="flex-grow: 1;">
+              <label for="vendedor">👤 Vendedor:</label>
+              <input type="text" id="vendedor" name="vendedor" placeholder="Seu Nome RP">
+          </div>
+          <div style="flex-grow: 1;">
+              <label for="comprador">🏴 Facção Compradora:</label>
+              <input type="text" id="comprador" name="comprador" placeholder="Nome da Facção">
+          </div>
+      </div>
       <div class="parceria-options">
           <label><input type="radio" name="parceria" value="sem" checked> Sem Parceria</label>
           <label><input type="radio" name="parceria" value="com"> Com Parceria</label>
@@ -213,23 +258,31 @@
       </table>
 
       <div class="button-group">
-        <button type="button" class="calculate" onclick="calcular()">Calcular Total</button>
+        <button type="button" class="calculate" onclick="calcular()">Calcular e Gerar Comprovante</button>
         <button type="button" class="reset" onclick="resetar()">Zerar</button>
       </div>
     </form>
 
     <div id="resultado" class="result"></div>
+
+    <div id="comprovante-area" style="display: none;">
+        </div>
+    
+    <div class="button-group">
+        <button type="button" id="download-btn" class="download-btn" onclick="baixarComprovante()" style="display: none;">⬇️ Baixar Imagem (JPEG)</button>
+    </div>
+
   </div>
 
   <script>
-    // Definição dos preços com e sem parceria
+    // Definição dos preços com e sem parceria (Adicionado o nome completo para o comprovante)
     const precosVariaveis = {
-        FAJUTO: { com: 2500, sem: 3000 },
-        COMUM: { com: 3500, sem: 4000 },
-        INCOMUM: { com: 5500, sem: 6000 },
-        RARO: { com: 12000, sem: 13000 },
-        ESPECIAL: { com: 25000, sem: 26000 },
-        LUVA: { com: 1000, sem: 1300 }
+        FAJUTO: { com: 2500, sem: 3000, nome: "PENDRIVE FAJUTO" },
+        COMUM: { com: 3500, sem: 4000, nome: "PENDRIVE COMUM" },
+        INCOMUM: { com: 5500, sem: 6000, nome: "PENDRIVE INCOMUM" },
+        RARO: { com: 12000, sem: 13000, nome: "PENDRIVE RARO" },
+        ESPECIAL: { com: 25000, sem: 26000, nome: "PENDRIVE ESPECIAL" },
+        LUVA: { com: 1000, sem: 1300, nome: "LUVA" }
     };
 
     function formatCurrency(value) {
@@ -240,20 +293,86 @@
     function calcular() {
       const form = document.forms["calcForm"];
       let total = 0;
+      let itensVendidos = [];
+
+      // Dados do Vendedor e Comprador
+      const vendedor = document.getElementById("vendedor").value.toUpperCase() || "NÃO INFORMADO";
+      const comprador = document.getElementById("comprador").value.toUpperCase() || "NÃO INFORMADO";
       
       // Determina se a parceria está ativa
       const isParceria = form.parceria.value === 'com';
       const tipoPreco = isParceria ? 'com' : 'sem';
+      const statusParceria = isParceria ? 'COM PARCERIA' : 'SEM PARCERIA';
 
-      // Calcula o total
+      // Calcula o total e registra itens
       for (const item in precosVariaveis) {
         const input = form[item];
         const qtd = parseInt(input ? input.value : '0') || 0;
         const preco = precosVariaveis[item][tipoPreco];
-        total += preco * qtd;
+        
+        if (qtd > 0) {
+            total += preco * qtd;
+            itensVendidos.push(`<li>${qtd}x ${precosVariaveis[item].nome} (${formatCurrency(preco)} un.)</li>`);
+        }
       }
-      
+
+      // 1. Atualiza o resultado total
       document.getElementById("resultado").innerHTML = `<strong>TOTAL A RECEBER: ${formatCurrency(total)}</strong>`;
+      
+      // 2. Monta o HTML do Comprovante com estilo para ser capturado
+      const comprovanteHTML = `
+        <div id="comprovante-content" style="font-family: 'Roboto', sans-serif; padding: 25px; background: #0d0d0d; border-radius: 8px; color: #f8f8f2; border: 3px solid #ffb86c; width: 450px; margin: 0 auto;">
+            <h3 style="color: #ff5555; text-align: center; border-bottom: 2px solid #ff5555; padding-bottom: 10px; margin-top: 0; font-size: 1.5em;">COMPROVANTE DE VENDA - TRINDADE ♦️</h3>
+            <p style="font-size: 1.1em; margin-bottom: 5px;"><strong>👤 Vendedor:</strong> ${vendedor}</p>
+            <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>🏴 Comprador:</strong> ${comprador}</p>
+            <p style="font-size: 1.1em; margin-bottom: 15px; color: #f1fa8c;"><strong>🤝 Status:</strong> ${statusParceria}</p>
+            <h4 style="color: #ffb86c; border-bottom: 1px solid #444; padding-bottom: 5px; font-size: 1.2em;">Itens Vendidos:</h4>
+            <ul style="list-style-type: disc; padding-left: 20px; margin-top: 5px; font-size: 1.1em;">
+                ${itensVendidos.length > 0 ? itensVendidos.join('') : '<li>Nenhum item vendido.</li>'}
+            </ul>
+            <h2 style="color: #50fa7b; text-align: center; padding: 15px; background: #1e1e1e; border-radius: 5px; margin-top: 25px; border: 1px solid #50fa7b; font-size: 2em;">VALOR TOTAL: ${formatCurrency(total)}</h2>
+            <p style="text-align: center; font-size: 0.9em; margin-top: 15px; color: #6272a4;">Gerado em: ${new Date().toLocaleString('pt-BR')}</p>
+        </div>
+      `;
+
+      const comprovanteArea = document.getElementById("comprovante-area");
+      comprovanteArea.innerHTML = comprovanteHTML;
+      comprovanteArea.style.display = 'block';
+      document.getElementById("download-btn").style.display = 'inline-block';
+      
+      // Move a visualização do comprovante para o topo da área de resultado para melhor UX
+      comprovanteArea.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // NOVA FUNÇÃO PARA BAIXAR O COMPROVANTE
+    function baixarComprovante() {
+        const comprovanteDiv = document.getElementById("comprovante-content"); // Captura APENAS o conteúdo do comprovante
+
+        if (!comprovanteDiv) {
+            alert('Calcule a venda primeiro para gerar o comprovante.');
+            return;
+        }
+
+        // Usa html2canvas para converter o div em canvas
+        html2canvas(comprovanteDiv, { 
+            scale: 2, // Aumenta a resolução para uma imagem mais nítida
+            backgroundColor: '#1e1e1e', // Cor de fundo para o comprovante
+            useCORS: true 
+        }).then(canvas => {
+            // Converte o canvas para Data URL (imagem) no formato JPEG (qualidade 0.9)
+            const imageURL = canvas.toDataURL('image/jpeg', 0.9); 
+            
+            // Cria um link temporário para download
+            const link = document.createElement('a');
+            link.href = imageURL;
+            link.download = `comprovante_trindade_${Date.now()}.jpeg`; 
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }).catch(error => {
+            console.error('Erro ao gerar a imagem:', error);
+            alert('Não foi possível gerar a imagem do comprovante. Verifique o console para detalhes.');
+        });
     }
 
     function resetar() {
@@ -262,10 +381,17 @@
       // Reseta inputs de quantidade
       for (const input of form.querySelectorAll('input[type="number"]')) input.value = 0;
 
+      // Reseta campos de texto
+      document.getElementById("vendedor").value = '';
+      document.getElementById("comprador").value = '';
+
       // Reseta o seletor de Parceria para "Sem Parceria"
       if (form.parceria) form.parceria.value = 'sem';
       
       document.getElementById("resultado").innerHTML = "";
+      document.getElementById("comprovante-area").innerHTML = "";
+      document.getElementById("comprovante-area").style.display = 'none';
+      document.getElementById("download-btn").style.display = 'none';
     }
   </script>
 </body>
